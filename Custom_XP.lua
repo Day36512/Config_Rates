@@ -1,3 +1,12 @@
+--[[
+Name: Custom_XP
+Version: 1.0.0
+Made by: Dinkledork
+Notes: use ingame command .xp 
+
+]]
+
+
 local enabled = true -- set to false to disable the entire script
 local GMonly = false -- set to true to allow only GMs to change rates
 

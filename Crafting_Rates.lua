@@ -1,3 +1,12 @@
+--[[
+Name: Crafting_Rates
+Version: 1.0.0
+Made by: Dinkledork
+Notes: use ingame command .craft
+
+]]
+
+
 local enabled = true -- disable the script with true or false
 local GMonly = false -- determine whether you want only GMs to be able to use said command
 
