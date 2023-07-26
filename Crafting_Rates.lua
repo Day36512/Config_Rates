@@ -4,7 +4,7 @@ Version: 1.0.0
 Made by: Dinkledork
 Notes: use ingame command .craft
 
-]]
+
 
 
 local enabled = true -- disable the script with true or false
@@ -79,7 +79,7 @@ local function createCraftRatesTable()
             CharID INT PRIMARY KEY,
             CraftRate INT DEFAULT 1
         );
-    ]])
+   )
 end
 
 if enabled then
@@ -87,4 +87,4 @@ if enabled then
     RegisterPlayerEvent(3, OnLogin)
     RegisterPlayerEvent(52, onCreateItem)
     RegisterPlayerEvent(42, SetCraftRate)
-end
+end ]]
