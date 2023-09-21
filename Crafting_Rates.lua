@@ -1,4 +1,4 @@
---[[
+
 Name: Crafting_Rates
 Version: 1.0.0
 Made by: Dinkledork
@@ -87,4 +87,4 @@ if enabled then
     RegisterPlayerEvent(3, OnLogin)
     RegisterPlayerEvent(52, onCreateItem)
     RegisterPlayerEvent(42, SetCraftRate)
-end ]]
+end 
