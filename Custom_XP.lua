@@ -3,7 +3,6 @@ Name: Custom_XP
 Version: 1.0.0
 Made by: Dinkledork
 Notes: use ingame command .xp 
-
 ]]
 
 CustomXPNamespace = {}
@@ -41,10 +40,6 @@ function CustomXPNamespace.SetRate(event, player, command)
     local PUID = CustomXPNamespace.getPlayerCharacterGUID(player)
     
     if command:find("xp") or command:find("exp") then
-        if player:HasItem(800048, 1) then
-            player:SendBroadcastMessage("|cffff0000You do not have access to this feature in Slow and Steady Mode.|r")
-            return false
-        end
 
         if command:find("q") or command:find("Q") or command:find("?") or command == "xp" or command == "exp" then
             local Q = WorldDBQuery(string.format("SELECT * FROM custom_xp WHERE CharID=%i", PUID))
@@ -106,4 +101,5 @@ if CustomXPNamespace.enabled then
     RegisterPlayerEvent(42, CustomXPNamespace.SetRate)
     RegisterPlayerEvent(30, CustomXPNamespace.OnFirstLogin) 
 end
+
 
