@@ -3,9 +3,7 @@ Name: Crafting_Rates
 Version: 1.0.0
 Made by: Dinkledork
 Notes: use ingame command .craft
-
 ]]
-
 
 CraftingRatesNamespace = {}
 
@@ -43,10 +41,6 @@ function CraftingRatesNamespace.SetCraftRate(event, player, command)
         end
 
         if rate and rate >= 1 and rate <= 10 then
-            if player:HasItem(800048, 1) or player:HasItem(800086, 1) then
-                player:SendBroadcastMessage("|cffff0000You cannot use this command while certain challenge modes are active!|r")
-                return false
-            end
             if CraftingRatesNamespace.GMonly and player:GetGMRank() < mingmrank then
                 CraftingRatesNamespace.GMONLY(player)
                 return false
