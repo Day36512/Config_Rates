@@ -1,10 +1,3 @@
---[[
-Name: Custom_XP
-Version: 1.0.0
-Made by: Dinkledork
-Notes: use ingame command .xp 
-]]
-
 CustomXPNamespace = {}
 
 CustomXPNamespace.enabled = true
@@ -22,9 +15,24 @@ function CustomXPNamespace.OnLogin(event, player)
     local PUID = CustomXPNamespace.getPlayerCharacterGUID(player)
     local Q = WorldDBQuery(string.format("SELECT * FROM custom_xp WHERE CharID=%i", PUID))
 
+    if player:HasItem(800048, 1) then
+        local specialRate = 0.5
+        if Q then
+            WorldDBExecute(string.format("UPDATE custom_xp SET Rate = %.2f WHERE CharID = %i", specialRate, PUID))
+        else
+            WorldDBExecute(string.format("INSERT INTO custom_xp VALUES (%i, %.2f)", PUID, specialRate))
+        end
+        player:SendBroadcastMessage(string.format("|cff5af304Your experience rate is set to %.1fx due to special item.|r", specialRate))
+        return
+    end
+
     if Q then
         local CharID, Rate = Q:GetUInt32(0), Q:GetFloat(1)
         player:SendBroadcastMessage(string.format("|cff5af304Your experience rate is currently set to %.1f|r", Rate))
+    else
+        local defaultRate = 1
+        WorldDBExecute(string.format("INSERT INTO custom_xp VALUES (%i, %.2f)", PUID, defaultRate))
+        player:SendBroadcastMessage(string.format("|cff5af304Your experience rate is set to default: %.1fx|r", defaultRate))
     end
 end
 
@@ -40,6 +48,10 @@ function CustomXPNamespace.SetRate(event, player, command)
     local PUID = CustomXPNamespace.getPlayerCharacterGUID(player)
     
     if command:find("xp") or command:find("exp") then
+        if player:HasItem(800048, 1) then
+            player:SendBroadcastMessage("|cffff0000You do not have access to this feature in Slow and Steady Mode.|r")
+            return false
+        end
 
         if command:find("q") or command:find("Q") or command:find("?") or command == "xp" or command == "exp" then
             local Q = WorldDBQuery(string.format("SELECT * FROM custom_xp WHERE CharID=%i", PUID))
@@ -61,8 +73,7 @@ function CustomXPNamespace.SetRate(event, player, command)
                 CustomXPNamespace.GMONLY(player)
                 return false
             elseif not CustomXPNamespace.GMonly or player:GetGMRank() >= mingmrank then
-                WorldDBExecute(string.format("DELETE FROM custom_xp WHERE CharID = %i", PUID))
-                WorldDBExecute(string.format("INSERT INTO custom_xp VALUES (%i, %.2f)", PUID, rate))
+                WorldDBExecute(string.format("UPDATE custom_xp SET Rate = %.2f WHERE CharID = %i", rate, PUID))
                 player:SendBroadcastMessage(string.format("|cff5af304You changed your experience rate to %.2fx|r", rate))
                 return false
             end
@@ -101,5 +112,3 @@ if CustomXPNamespace.enabled then
     RegisterPlayerEvent(42, CustomXPNamespace.SetRate)
     RegisterPlayerEvent(30, CustomXPNamespace.OnFirstLogin) 
 end
-
-
