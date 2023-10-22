@@ -36,13 +36,6 @@ function CustomXPNamespace.OnLogin(event, player)
     end
 end
 
-function CustomXPNamespace.OnFirstLogin(event, player)
-    local PUID = CustomXPNamespace.getPlayerCharacterGUID(player)
-    local defaultRate = 1
-    WorldDBExecute(string.format("INSERT INTO custom_xp VALUES (%i, %.2f)", PUID, defaultRate))
-    player:SendBroadcastMessage(string.format("|cff5af304Your experience rate is set to default: %.1fx|r", defaultRate))
-end
-
 function CustomXPNamespace.SetRate(event, player, command)
     local mingmrank = 3
     local PUID = CustomXPNamespace.getPlayerCharacterGUID(player)
@@ -110,5 +103,4 @@ if CustomXPNamespace.enabled then
     RegisterPlayerEvent(3, CustomXPNamespace.OnLogin)
     RegisterPlayerEvent(12, CustomXPNamespace.OnXP)
     RegisterPlayerEvent(42, CustomXPNamespace.SetRate)
-    RegisterPlayerEvent(30, CustomXPNamespace.OnFirstLogin) 
 end
