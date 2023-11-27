@@ -1,17 +1,27 @@
 GatherRatesNamespace = {}
 
-GatherRatesNamespace.enabled = true -- set to true to enable
-GatherRatesNamespace.GMonly = false -- set to true to enable for gm only
+GatherRatesNamespace.enabled = true
+GatherRatesNamespace.GMonly = false
 
 function GatherRatesNamespace.getPlayerCharacterGUID(player)
+    if not player then
+        print("Error: Player object is nil in getPlayerCharacterGUID")
+        return nil
+    end
     return player:GetGUIDLow()
 end
 
 function GatherRatesNamespace.GMONLY(player)
+    if not player then
+        return
+    end
     -- player:SendBroadcastMessage("|cffff0000You don't have permission to use this command.|r")
 end
 
 function GatherRatesNamespace.OnLogin(event, player)
+    if not player then
+        return
+    end
     local PUID = GatherRatesNamespace.getPlayerCharacterGUID(player)
     local Q = CharDBQuery(string.format("SELECT GatherRate FROM custom_gather_rates WHERE CharID=%i", PUID))
 
@@ -22,6 +32,9 @@ function GatherRatesNamespace.OnLogin(event, player)
 end
 
 function GatherRatesNamespace.SetGatherRate(event, player, command)
+    if not player then
+        return
+    end
     local mingmrank = 3
     local PUID = GatherRatesNamespace.getPlayerCharacterGUID(player)
 
@@ -54,6 +67,9 @@ function GatherRatesNamespace.SetGatherRate(event, player, command)
 end
 
 function GatherRatesNamespace.onLootItem(event, player, item, count)
+    if not player then
+        return
+    end
     local itemEntry = item:GetEntry()
     local PUID = GatherRatesNamespace.getPlayerCharacterGUID(player)
     local Q = CharDBQuery(string.format("SELECT GatherRate FROM custom_gather_rates WHERE CharID=%i", PUID))
