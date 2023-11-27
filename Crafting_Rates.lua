@@ -3,22 +3,34 @@ Name: Crafting_Rates
 Version: 1.0.0
 Made by: Dinkledork
 Notes: use ingame command .craft
+
 ]]
+
 
 CraftingRatesNamespace = {}
 
-CraftingRatesNamespace.enabled = true -- set to true to enable
-CraftingRatesNamespace.GMonly = false -- set to true to enable for gm only=
+CraftingRatesNamespace.enabled = true
+CraftingRatesNamespace.GMonly = false
 
 function CraftingRatesNamespace.getPlayerCharacterGUID(player)
+    if not player then
+        print("Error: Player object is nil in getPlayerCharacterGUID")
+        return nil
+    end
     return player:GetGUIDLow()
 end
 
 function CraftingRatesNamespace.GMONLY(player)
+    if not player then
+        return
+    end
     -- player:SendBroadcastMessage("|cffff0000You don't have permission to use this command.|r")
 end
 
 function CraftingRatesNamespace.OnLogin(event, player)
+    if not player then
+        return
+    end
     local PUID = CraftingRatesNamespace.getPlayerCharacterGUID(player)
     local Q = CharDBQuery(string.format("SELECT CraftRate FROM custom_craft_rates WHERE CharID=%i", PUID))
 
@@ -29,6 +41,9 @@ function CraftingRatesNamespace.OnLogin(event, player)
 end
 
 function CraftingRatesNamespace.SetCraftRate(event, player, command)
+    if not player then
+        return false
+    end
     local mingmrank = 3
     local PUID = CraftingRatesNamespace.getPlayerCharacterGUID(player)
 
@@ -41,6 +56,10 @@ function CraftingRatesNamespace.SetCraftRate(event, player, command)
         end
 
         if rate and rate >= 1 and rate <= 10 then
+            if player:HasItem(800048, 1) or player:HasItem(800086, 1) then
+                player:SendBroadcastMessage("|cffff0000You cannot use this command while certain challenge modes are active!|r")
+                return false
+            end
             if CraftingRatesNamespace.GMonly and player:GetGMRank() < mingmrank then
                 CraftingRatesNamespace.GMONLY(player)
                 return false
@@ -57,6 +76,10 @@ function CraftingRatesNamespace.SetCraftRate(event, player, command)
 end
 
 function CraftingRatesNamespace.onCreateItem(event, player, item, count)
+    if not player then
+        return
+    end
+
     local itemEntry = item:GetEntry()
     local PUID = CraftingRatesNamespace.getPlayerCharacterGUID(player)
     local Q = CharDBQuery(string.format("SELECT CraftRate FROM custom_craft_rates WHERE CharID=%i", PUID))
@@ -88,3 +111,4 @@ if CraftingRatesNamespace.enabled then
     RegisterPlayerEvent(52, CraftingRatesNamespace.onCreateItem)
     RegisterPlayerEvent(42, CraftingRatesNamespace.SetCraftRate)
 end
+
