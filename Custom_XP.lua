@@ -4,14 +4,24 @@ CustomXPNamespace.enabled = true
 CustomXPNamespace.GMonly = false
 
 function CustomXPNamespace.getPlayerCharacterGUID(player)
+    if not player then
+        print("Error: Player object is nil in getPlayerCharacterGUID")
+        return nil
+    end
     return player:GetGUIDLow()
 end
 
 function CustomXPNamespace.GMONLY(player)
+    if not player then
+        return
+    end
     -- player:SendBroadcastMessage("|cffff0000You don't have permission to use this command.|r")
 end
 
 function CustomXPNamespace.OnLogin(event, player)
+if not player then
+        return
+    end
     local PUID = CustomXPNamespace.getPlayerCharacterGUID(player)
     local Q = WorldDBQuery(string.format("SELECT * FROM custom_xp WHERE CharID=%i", PUID))
 
@@ -37,6 +47,9 @@ function CustomXPNamespace.OnLogin(event, player)
 end
 
 function CustomXPNamespace.SetRate(event, player, command)
+if not player then
+        return
+    end
     local mingmrank = 3
     local PUID = CustomXPNamespace.getPlayerCharacterGUID(player)
     
@@ -75,6 +88,9 @@ function CustomXPNamespace.SetRate(event, player, command)
 end
 
 function CustomXPNamespace.OnXP(event, player, amount, victim)
+if not player then
+        return
+    end
     local PUID = CustomXPNamespace.getPlayerCharacterGUID(player)
     local Q = WorldDBQuery(string.format("SELECT * FROM custom_xp WHERE CharID=%i", PUID))
     local mingmrank = 3
